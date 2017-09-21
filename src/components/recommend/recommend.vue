@@ -17,7 +17,7 @@
               <li v-for="(item,index) in discList" :key="index" class="item">
                 <div class="icon">
                   <!--fastclick 解决点击时间api needsclick-->
-                  <img class="needsclick" @load='loadImage' v-lazy="item.imgUrl" width="60" height="60">
+                  <img class="needsclick" @load='loadImage' v-lazy="item.imgurl" width="60" height="60">
                 </div>
                 <div class="text">
                   <h2 class="name" v-html="item.creator.name"></h2>
@@ -63,6 +63,7 @@ export default {
       getDiscList().then((res)=>{
         if(res.code==ERR_OK){
           this.discList=res.data.list;
+          console.log(this.discList)
         }
       })
     },
@@ -76,7 +77,7 @@ export default {
   components:{
     Slider,
     Scroll,
-    loading
+    Loading
   }
 }
 </script>

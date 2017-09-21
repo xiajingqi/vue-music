@@ -1,6 +1,6 @@
 <template>
   <div class="singer">
-      歌手页
+      <list-view :data="singers"></list-view>
   </div>
 </template>
 
@@ -8,6 +8,7 @@
 import {getSingerList} from '../../api/singer'
 import {ERR_OK} from '../../api/config'
 import Singer from '../../common/js/singer'
+import ListView from '../../base/listview/listview'
 const hot_name="热门"
 const hot_singer_len=10
 export default {
@@ -16,6 +17,12 @@ export default {
         singers:[]
       }
     },
+    components:{
+      ListView
+    },
+    computed:{
+
+    },
     created(){
       this._getSingerList()
     },
@@ -23,7 +30,7 @@ export default {
       _getSingerList(){
         getSingerList().then((res)=>{
             if(res.code==ERR_OK){
-              this.singers=_normalizeSinger(res.data.list);
+              this.singers=this._normalizeSinger(res.data.list);
             }
         })
       },
@@ -31,7 +38,7 @@ export default {
         let map ={
           hot:{
             title:hot_name,
-            item:[]
+            items:[]
           }
         }
         list.forEach((item,index)=> {
@@ -41,6 +48,7 @@ export default {
               name:item.Fsinger_name,
             }))
           }
+          
           const key =item.Findex
           if(!map[key]){
             map[key]={
@@ -56,12 +64,12 @@ export default {
         // 为了得到有序列表，我们需要处理 map
         let ret=[]
         let hot=[]
-        for(let key in map){
-          let val=map[key]
-          if(val.title.match([/a-zA-Z/])){
-              ret.push(val)
-          }else if(val.title ==hot_name){
-              hot.push(val)
+        for (let key in map) {
+          let val = map[key]
+          if (val.title.match(/[a-zA-Z]/)) {
+            ret.push(val)
+          } else if (val.title === hot_name) {
+            hot.push(val)
           }
         }
         ret.sort((a,b)=>{

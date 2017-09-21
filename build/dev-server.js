@@ -41,7 +41,7 @@ apiRoutes.get('/getDiscList',function(req,res){
   })
 })
 
-app.use('api',apiRoutes)
+app.use('/api',apiRoutes)
 
 var compiler = webpack(webpackConfig)
 

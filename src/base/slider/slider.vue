@@ -10,8 +10,8 @@
 </template>
 
 <script>
-import BSscroll from 'better-scroll'
-import {addClass} from '../../common/js/dom'
+import BScroll from 'better-scroll'
+import {addClass,hasClass} from '../../common/js/dom'
 export default {
   data(){
     return{
@@ -38,9 +38,9 @@ export default {
         this._setSliderWidth();
         this._initDots();
         this._initSlider();
-        if(this.autoPlay){
-          this._play();
-        }
+        // if(this.autoPlay){
+        //   this._play();
+        // }
     },20)
     window.addEventListener('resize',()=>{
       if(!this.slider){
@@ -52,59 +52,60 @@ export default {
     })
   },
   methods:{ 
-      _setSliderWidth(isResize){
-        this.children=this.$refs.sliderGroup.children;
-        let width=0;
-        let sliderWidth =this.$refs.slider.clientWidth;
-        for(let i=0;i<this.children.length;i++){
-            let child=this.children[i];
-            addClass(child,'slider-item');
-            child.style.width=sliderWidth+'px';
-            width+=sliderWidth;
+      _setSliderWidth(isResize) {
+        this.children = this.$refs.sliderGroup.children
+
+        let width = 0
+        let sliderWidth = this.$refs.slider.clientWidth
+        for (let i = 0; i < this.children.length; i++) {
+          let child = this.children[i]
+          addClass(child, 'slider-item')
+
+          child.style.width = sliderWidth + 'px'
+          width += sliderWidth
         }
-        if(this.loop&&!isResize){
-          width +=2*sliderWidth;
-        }
-        this.$refs.sliderGroup.style.width=width+'px';
+        // if (this.loop && !isResize) {
+        //   width += 2 * sliderWidth
+        // }
+        this.$refs.sliderGroup.style.width = width + 'px'
       },
       _initDots(){
         this.dots=new Array(this.children.length)
       },
-      _initSlider(){
-        // 调用BS api实现无缝滚动
-        this.slider = new BSscroll(this.$refs.slider,{
-          scrollX:true,
-          scrollY:false,
-          momentum:false,
-          snap:true,
-          snapLoop:this.loop,
-          snapThreshold:0.3,
-          snapSpeed:400,
+      _initSlider() {
+        this.slider = new BScroll(this.$refs.slider, {
+          scrollX: true,
+          scrollY: false,
+          momentum: false,
+          snap: true,
+          snapLoop: this.loop,
+          snapThreshold: 0.3,
+          snapSpeed: 40,
           // click:true
         })
         // BSapi控制dot
         this.slider.on('scrollEnd',()=>{
           let pageIndex =this.slider.getCurrentPage().pageX;
-          if(this.loop){
-            pageIndex-=1;
-          }
+          // if(this.loop){
+          //   pageIndex-=1;
+          // }
           this.currentPageIndex=pageIndex;
-          if(this.autoPlay){
-            clearTimeout(this.timer);
-            this._play();
-          }
+          // if(this.autoPlay){
+          //   clearTimeout(this.timer);
+          //   this._play();
+          // }
         })
       },
-      _play(){
-        let pageIndex =this.currentPageIndex+1;
-        if(this.loop){
-          pageIndex+=1;
-        }
-        this.timer=setTimeout(()=>{
-          // BS api
-          this.slider.goToPage(pageIndex,0,400)
-        },this.interval)
-      }
+      // _play(){
+      //   let pageIndex =this.currentPageIndex+1;
+      //   // if(this.loop){
+      //   //   pageIndex=1;
+      //   // }
+      //   this.timer=setTimeout(()=>{
+      //     // BS api
+      //     this.slider.goToPage(pageIndex,0,400)
+      //   },this.interval)
+      // }
   },
   destroyed(){
     clearTimeout(this.timer)
@@ -116,6 +117,7 @@ export default {
 @import "../../common/stylus/variable"
 
   .slider
+    position: relative
     min-height: 1px
     .slider-group
       position: relative
