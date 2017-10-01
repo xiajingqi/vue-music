@@ -6,7 +6,7 @@
             <li v-for="(group,index) in data" class="list-group" :key="index" ref="listGroup">
                 <h2 class="list-group-title">{{group.title}}</h2>
                 <ul>
-                    <li v-for="(item,index) in group.items" class="list-group-item" :key="index">
+                    <li v-for="(item,index) in group.items" class="list-group-item" :key="index" @click='selectItem(item)'>
                         <img v-lazy="item.avatar" alt="" class="avatar">
                         <span class="name">{{item.name}}</span>
                     </li>
@@ -25,12 +25,16 @@
                 </li>
             </ul>
         </div>
+        <div v-show="!data.length" class="loading-container">
+            <loading></loading>
+        </div>
     </scroll>
 </template>
 
 <script>
 import Scroll from '../scroll/scroll'
 import {getData} from '../../common/js/dom'
+import Loading from '../../base/loading/loading'
 
 const anchor_height=18
 export default {
@@ -47,11 +51,14 @@ export default {
       }
   },
   created(){
-    this.touch={}
+    this.touch={} 
     this.listenScroll=true
     this.probeType=3
   },
   methods:{
+    selectItem(item){
+        this.$emit('select',item)
+    },
     onShortcutTouchStart(e){
         let anchorIndex=getData(e.target,'index')
         let firstTouch=e.touches[0]
@@ -70,6 +77,7 @@ export default {
         this.scrollY=pos.y
     },
     _scrollTo(index){
+        // this.scrollY=-this.listHeight[index]
         this.$refs.listview.scrollToElement(this.$refs.listGroup[index],0)
     },
     _calculateHeight(){
@@ -119,6 +127,7 @@ export default {
   },
   components:{
     Scroll,
+    Loading
   }
 }
 </script>
